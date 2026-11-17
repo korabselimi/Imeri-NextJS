@@ -1,7 +1,32 @@
 
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { translations, type Language } from "../lib/translations";
 
 export default function Home() {
+const [language, setLanguage] = useState<Language>("de");
+
+useEffect(() => {
+  const savedLanguage = localStorage.getItem("imeri-language");
+
+  if (
+    savedLanguage === "de" ||
+    savedLanguage === "al" ||
+    savedLanguage === "en"
+  ) {
+    setLanguage(savedLanguage);
+  }
+}, []);
+
+const changeLanguage = (lang: Language) => {
+  setLanguage(lang);
+  localStorage.setItem("imeri-language", lang);
+};
+
+const t = translations[language];
+
   return (
     <main className="min-h-screen bg-white">
       {/* NAVBAR */}
@@ -12,19 +37,31 @@ export default function Home() {
           </Link>
 
           <div className="hidden items-center gap-9 text-sm font-semibold text-white md:flex">
-            <Link href="/" className="hover:text-blue-300">Startseite</Link>
-            <Link href="#services" className="hover:text-blue-300">Leistungen</Link>
-            <Link href="#about" className="hover:text-blue-300">Über uns</Link>
-            <Link href="#contact" className="hover:text-blue-300">Kontakt</Link>
+<Link href="/" className="hover:text-blue-300">{t.home}</Link>
+<Link href="#services" className="hover:text-blue-300">{t.services}</Link>
+<Link href="#about" className="hover:text-blue-300">{t.about}</Link>
+<Link href="#contact" className="hover:text-blue-300">{t.contact}</Link>
           </div>
 
-          <div className="flex items-center gap-3 text-xs font-bold text-white">
-            <button className="text-blue-300">DE</button>
-            <span className="opacity-40">/</span>
-            <button className="hover:text-blue-300">AL</button>
-            <span className="opacity-40">/</span>
-            <button className="hover:text-blue-300">EN</button>
-          </div>
+
+<div className="flex items-center gap-3 text-xs font-bold text-white">
+  {(["de", "al", "en"] as Language[]).map((lang, index) => (
+    <div key={lang} className="flex items-center gap-3">
+      {index > 0 && <span className="opacity-40">/</span>}
+
+      <button
+        type="button"
+        onClick={() => changeLanguage(lang)}
+        className={`transition hover:text-blue-300 ${
+          language === lang ? "text-blue-300" : "text-white"
+        }`}
+      >
+        {lang.toUpperCase()}
+      </button>
+    </div>
+  ))}
+</div>
+
         </nav>
       </header>
 
@@ -38,34 +75,31 @@ export default function Home() {
       >
         <div className="mx-auto w-full max-w-7xl px-6 pt-24 lg:px-12">
           <div className="max-w-3xl">
-            <p className="mb-6 text-sm font-bold uppercase tracking-[0.3em] text-blue-300">
-              Bau & Gebäudeservice · Karlsruhe
-            </p>
+          <p className="mb-6 text-sm font-bold uppercase tracking-[0.3em] text-blue-300">
+  {t.heroLabel}
+</p>
 
-            <h1 className="text-5xl font-extrabold leading-tight tracking-tight text-white md:text-7xl">
-              Wir bauen mit
-              <br />
-              <span className="text-blue-300">Qualität & Vertrauen.</span>
-            </h1>
+<h1 className="text-5xl font-extrabold leading-tight tracking-tight text-white md:text-7xl">
+  {t.heroTitle}
+  <br />
+  <span className="text-blue-300">{t.heroHighlight}</span>
+</h1>
+<p className="mt-8 max-w-xl text-lg leading-relaxed text-slate-200">
+  {t.heroDescription}
+</p>
 
-            <p className="mt-8 max-w-xl text-lg leading-relaxed text-slate-200">
-              Ihr zuverlässiger Partner für Trockenbau,
-              Bauhilfsarbeiten, Kabelverlegung, Bodenverlegung
-              und professionelle Gebäudereinigung.
-            </p>
-
-            <Link
-              href="#services"
-              className="mt-10 inline-flex items-center rounded-sm bg-blue-500 px-8 py-4 text-sm font-bold uppercase tracking-wider text-white transition hover:bg-blue-600"
-            >
-              Unsere Leistungen →
-            </Link>
+<Link
+  href="#services"
+  className="mt-10 inline-flex items-center rounded-sm bg-blue-500 px-8 py-4 text-sm font-bold uppercase tracking-wider text-white transition hover:bg-blue-600"
+>
+  {t.exploreServices} →
+</Link>
           </div>
         </div>
 
         <div className="absolute bottom-10 left-6 hidden items-center gap-4 text-xs font-semibold uppercase tracking-widest text-white/70 md:flex lg:left-12">
           <span className="h-px w-10 bg-blue-300" />
-          Scrollen & entdecken
+          {t.scrollDiscover}
         </div>
       </section>
 
@@ -73,52 +107,53 @@ export default function Home() {
 <section id="services" className="bg-slate-50 py-24 md:py-32">
   <div className="mx-auto max-w-7xl px-6 lg:px-12">
     <div className="mb-14 max-w-2xl">
-      <p className="mb-4 text-sm font-bold uppercase tracking-[0.25em] text-blue-600">
-        Was wir anbieten
-      </p>
 
-      <h2 className="text-4xl font-extrabold tracking-tight text-slate-900 md:text-5xl">
-        Unsere Leistungen<span className="text-blue-500">.</span>
-      </h2>
+<p className="mb-4 text-sm font-bold uppercase tracking-[0.25em] text-blue-600">
+  {t.servicesLabel}
+</p>
 
-      <p className="mt-6 text-lg leading-relaxed text-slate-600">
-        Von der Planung bis zur Umsetzung – wir stehen für
-        zuverlässige Arbeit, höchste Sorgfalt und professionelle Ergebnisse.
-      </p>
+<h2 className="text-4xl font-extrabold tracking-tight text-slate-900 md:text-5xl">
+  {t.servicesTitle}<span className="text-blue-500">.</span>
+</h2>
+
+<p className="mt-6 text-lg leading-relaxed text-slate-600">
+  {t.servicesDescription}
+</p>
+
     </div>
 
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {[
-        {
-          title: "Trockenbau",
-          description: "Moderne Innenausbau-Lösungen mit Präzision und Qualität.",
-          href: "/drywall",
-          image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=900",
-        },
-        {
-          title: "Bauhilfsarbeiten",
-          description: "Zuverlässige Unterstützung für Ihr Bauprojekt.",
-          href: "/support",
-          image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=900",
-        },
-        {
-          title: "Kabelverlegung",
-          description: "Fachgerechte Verlegung von Kabeln und Leitungen.",
-          href: "/cables",
-          image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=900",
-        },
-        {
-          title: "Bodenverlegung",
-          description: "Hochwertige Bodenlösungen für jeden Raum.",
-          href: "/flooring",
-          image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900",
-        },
-        {
-          title: "Gebäudereinigung",
-          description: "Professionelle Reinigung für gepflegte Gebäude.",
-          href: "/cleaning",
-          image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=900",
-        },
+{
+  title: t.drywall,
+  description: t.drywallDesc,
+  href: "/drywall",
+  image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=900",
+},
+{
+  title: t.support,
+  description: t.supportDesc,
+  href: "/support",
+  image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=900",
+},
+{
+  title: t.cables,
+  description: t.cablesDesc,
+  href: "/cables",
+  image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=900",
+},
+{
+  title: t.flooring,
+  description: t.flooringDesc,
+  href: "/flooring",
+  image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900",
+},
+{
+  title: t.cleaning,
+  description: t.cleaningDesc,
+  href: "/cleaning",
+  image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=900",
+},
       ].map((service) => (
         <Link
           key={service.title}
@@ -165,47 +200,40 @@ export default function Home() {
       />
     </div>
 
-    {/* CONTENT */}
-    <div>
-      <p className="mb-4 text-sm font-bold uppercase tracking-[0.25em] text-blue-600">
-        Wer wir sind
-      </p>
+{/* CONTENT */}
+<div>
+  <p className="mb-4 text-sm font-bold uppercase tracking-[0.25em] text-blue-600">
+    {t.aboutLabel}
+  </p>
 
-      <h2 className="text-4xl font-extrabold tracking-tight text-slate-900 md:text-5xl">
-        Über IMERI<span className="text-blue-500">.</span>
-      </h2>
+  <h2 className="text-4xl font-extrabold tracking-tight text-slate-900 md:text-5xl">
+    {t.aboutTitle}<span className="text-blue-500">.</span>
+  </h2>
 
-      <p className="mt-8 text-lg leading-relaxed text-slate-600">
-        IMERI ist Ihr zuverlässiger Partner für Bau- und
-        Gebäudedienstleistungen in Karlsruhe und Umgebung.
-        Wir legen großen Wert auf Qualität, Präzision und
-        eine vertrauensvolle Zusammenarbeit.
-      </p>
+<p className="mt-8 text-lg leading-relaxed text-slate-600">
+  {t.aboutParagraph1}
+</p>
 
-      <p className="mt-6 text-lg leading-relaxed text-slate-600">
-        Ob Trockenbau, Bauhilfsarbeiten, Kabelverlegung,
-        Bodenverlegung oder professionelle Gebäudereinigung –
-        wir unterstützen unsere Kunden mit Engagement,
-        Sorgfalt und einem hohen Qualitätsanspruch.
-      </p>
+<p className="mt-6 text-lg leading-relaxed text-slate-600">
+  {t.aboutParagraph2}
+</p>
 
       {/* FEATURES */}
       <div className="mt-10 grid gap-6 sm:grid-cols-2">
         <div className="border-l-4 border-blue-500 pl-5">
           <h3 className="text-lg font-bold text-slate-900">
-            Qualität
+            {t.quality}
           </h3>
           <p className="mt-2 text-sm text-slate-600">
-            Sorgfältige Arbeit und professionelle Ergebnisse.
-          </p>
+{t.qualityDesc}          </p>
         </div>
 
         <div className="border-l-4 border-blue-500 pl-5">
           <h3 className="text-lg font-bold text-slate-900">
-            Zuverlässigkeit
+            {t.reliability}
           </h3>
           <p className="mt-2 text-sm text-slate-600">
-            Verlässliche Zusammenarbeit bei jedem Projekt.
+            {t.reliabilityDesc}
           </p>
         </div>
       </div>
@@ -214,11 +242,12 @@ export default function Home() {
         href="#contact"
         className="mt-10 inline-flex bg-blue-600 px-8 py-4 text-sm font-bold uppercase tracking-wider text-white transition hover:bg-blue-700"
       >
-        Kontakt aufnehmen →
+        {t.aboutButton} →
       </a>
     </div>
   </div>
 </section>
+
 
 
 {/* CONTACT */}
@@ -226,72 +255,88 @@ export default function Home() {
   <div className="mx-auto max-w-7xl px-6 lg:px-12">
     <div className="max-w-3xl">
       <p className="mb-5 text-sm font-bold uppercase tracking-[0.25em] text-blue-400">
-        Kontakt
+        {t.contactLabel}
       </p>
 
       <h2 className="text-4xl font-extrabold tracking-tight md:text-6xl">
-        Lassen Sie uns gemeinsam
-        <span className="text-blue-400"> etwas schaffen.</span>
+        {t.contactTitle}
+        <span className="text-blue-400">.</span>
       </h2>
 
       <p className="mt-8 max-w-xl text-lg leading-relaxed text-slate-300">
-        Sie planen ein Bauprojekt oder benötigen professionelle
-        Gebäudedienstleistungen? Kontaktieren Sie uns –
-        wir freuen uns auf Ihre Anfrage.
+        {t.contactDescription}
       </p>
 
       <a
         href="mailto:IHRE-EMAIL@BEISPIEL.DE"
         className="mt-10 inline-flex bg-blue-500 px-8 py-4 text-sm font-bold uppercase tracking-wider text-white transition hover:bg-blue-600"
       >
-        Jetzt Kontakt aufnehmen →
+        {t.contactButton} →
       </a>
     </div>
   </div>
 </section>
 
 
+
+
 {/* FOOTER */}
 <footer className="bg-[#07101e] py-14 text-slate-300">
   <div className="mx-auto grid max-w-7xl gap-12 px-6 md:grid-cols-3 lg:px-12">
+
+    {/* COMPANY */}
     <div>
-      <Link href="/" className="text-3xl font-extrabold tracking-tight text-white">
+      <Link
+        href="/"
+        className="text-3xl font-extrabold tracking-tight text-white"
+      >
         IMERI<span className="text-blue-400">.</span>
       </Link>
+
       <p className="mt-4 max-w-xs text-sm leading-relaxed">
-        Ihr Partner für Bau- und Gebäudedienstleistungen
-        in Karlsruhe und Umgebung.
+        {t.footerDescription}
       </p>
     </div>
 
+    {/* NAVIGATION */}
     <div>
-      <h3 className="mb-5 font-bold text-white">Navigation</h3>
+      <h3 className="mb-5 font-bold text-white">
+        {t.footerNavigation}
+      </h3>
+
       <div className="flex flex-col gap-3 text-sm">
-        <Link href="/">Startseite</Link>
-        <Link href="#services">Leistungen</Link>
-        <Link href="#about">Über uns</Link>
-        <Link href="#contact">Kontakt</Link>
+        <Link href="/">{t.home}</Link>
+        <Link href="#services">{t.services}</Link>
+        <Link href="#about">{t.about}</Link>
+        <Link href="#contact">{t.contact}</Link>
       </div>
     </div>
 
+    {/* SERVICES */}
     <div>
-      <h3 className="mb-5 font-bold text-white">Unsere Leistungen</h3>
+      <h3 className="mb-5 font-bold text-white">
+        {t.servicesTitle}
+      </h3>
+
       <div className="flex flex-col gap-3 text-sm">
-        <Link href="/drywall">Trockenbau</Link>
-        <Link href="/support">Bauhilfsarbeiten</Link>
-        <Link href="/cables">Kabelverlegung</Link>
-        <Link href="/flooring">Bodenverlegung</Link>
-        <Link href="/cleaning">Gebäudereinigung</Link>
+        <Link href="/drywall">{t.drywall}</Link>
+        <Link href="/support">{t.support}</Link>
+        <Link href="/cables">{t.cables}</Link>
+        <Link href="/flooring">{t.flooring}</Link>
+        <Link href="/cleaning">{t.cleaning}</Link>
       </div>
     </div>
+
   </div>
 
+  {/* COPYRIGHT */}
   <div className="mx-auto mt-14 max-w-7xl border-t border-white/10 px-6 pt-7 text-sm text-slate-500 lg:px-12">
     <p>
-      &copy; {new Date().getFullYear()} IMERI. Alle Rechte vorbehalten.
+      &copy; {new Date().getFullYear()} IMERI. {t.footerRights}
     </p>
   </div>
 </footer>
+
     </main>
   );
 }
